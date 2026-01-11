@@ -1,0 +1,14 @@
+node_modules
+.DS_Store
+
+# Demo app artifacts
+packages/demo-app/agent-state/events.ndjson
+packages/demo-app/node_modules
+packages/demo-app/dist
+
+# In case an app writes agent-state at repo root
+agent-state/events.ndjson
+
+# Package artifacts
+packages/mini-brain/node_modules
+

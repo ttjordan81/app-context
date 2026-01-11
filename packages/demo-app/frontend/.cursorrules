@@ -1,0 +1,4 @@
+# Mini Brain Instructions
+
+- Read agent-state/AGENT_CONTEXT.md and agent-state/OPEN_ISSUES.md before coding.
+- Keep changes minimal and safe; do not introduce logging of secrets.

@@ -1,0 +1,4 @@
+# App Context Instructions
+
+- Read packages/demo-app/agent-state/AGENT_CONTEXT.md and packages/demo-app/agent-state/OPEN_ISSUES.md before coding.
+- Keep changes minimal and safe; do not introduce logging of secrets.

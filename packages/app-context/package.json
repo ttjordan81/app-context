@@ -1,0 +1,32 @@
+{
+  "name": "@contextlab/app-context",
+  "version": "0.1.1",
+  "description": "Capture sanitized request + domain events and generate mini-agent context markdown.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./index.cjs",
+  "module": "./index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "require": "./index.cjs"
+    }
+  },
+  "bin": {
+    "app-context": "bin/app-context.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "index.js",
+    "index.cjs"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {},
+  "scripts": {
+    "summarize": "node ./bin/app-context.js summarize --output ../demo-app/agent-state --tail 2000",
+    "test": "node -e \"console.log('no tests yet')\""
+  }
+}

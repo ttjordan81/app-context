@@ -1,6 +1,37 @@
 # @contextlab/app-context
 
-Capture sanitized request + domain events from a Node/Express app, write them as NDJSON, and generate markdown context files that are easy for agents (Windsurf/Cascade, Cursor, etc.) to consume.
+**Keep your AI coding assistant up to speed.**
+
+App-context generates structured, sanitized Markdown context from your app's runtime activity, so Windsurf, Cursor, and other AI coding assistants can quickly understand what your app is actually doing (behavior, error patterns, and real API usage) without you reconstructing history or copy-pasting logs.
+
+App-context is for:
+- Debugging faster with real request/error patterns
+- Returning to a project (or handing it off) with accurate, up-to-date context
+- Getting Windsurf/Cursor productive immediately with minimal manual explanation
+
+## Why this exists
+
+When you come back to a project (or hand it off), the hardest part is usually missing context: what's happening right now, what's failing, and how the API is really being used.
+
+You're working in Windsurf/Cascade and ask: *"Why is the `/api/submissions` endpoint returning 400s?"*
+
+Instead of you manually explaining:
+- Which routes exist
+- What validation errors are happening
+- How often errors occur vs successes
+
+...the agent reads `agent-state/AGENT_CONTEXT.md` and `OPEN_ISSUES.md` (auto-generated from your app's runtime events) and immediately sees:
+
+```markdown
+## API Routes (last 2000 events)
+- POST /api/submissions: 45 requests, 12 errors (26.7% error rate)
+- GET /api/submissions: 89 requests, 0 errors
+
+## Open Issues
+- submission.validation_failed: 12 occurrences (missing fields: name, email)
+```
+
+Now the agent knows exactly what's broken and can propose a fix without you copy-pasting logs or explaining the codebase.
 
 ## Install
 
@@ -54,6 +85,7 @@ npx app-context summarize --output ./agent-state --tail 2000
 - `AGENT_CONTEXT.md`
 - `OPEN_ISSUES.md`
 - `RUNBOOK.md`
+- `BUSINESS_GOAL.md` (created once if missing; human-authored)
 - `AGENT_PLAYBOOK.md` (created once if missing)
 
 It also writes `events.ndjson` (append-only) into the same output directory.

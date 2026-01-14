@@ -9,6 +9,14 @@ export async function initAgentState({ outputDir = "./agent-state" } = {}) {
 
   const projectRoot = process.cwd();
 
+  const businessGoalTarget = path.join(resolved, "BUSINESS_GOAL.md");
+  if (!fs.existsSync(businessGoalTarget)) {
+    const here = path.dirname(fileURLToPath(import.meta.url));
+    const templatePath = path.join(here, "templates", "BUSINESS_GOAL.md");
+    const template = fs.readFileSync(templatePath, "utf8");
+    fs.writeFileSync(businessGoalTarget, template, "utf8");
+  }
+
   const playbookTarget = path.join(resolved, "AGENT_PLAYBOOK.md");
   if (!fs.existsSync(playbookTarget)) {
     const here = path.dirname(fileURLToPath(import.meta.url));
@@ -20,7 +28,7 @@ export async function initAgentState({ outputDir = "./agent-state" } = {}) {
   const agentsMdPath = path.join(projectRoot, "AGENTS.md");
   if (!fs.existsSync(agentsMdPath)) {
     const relAgentState = path.relative(projectRoot, resolved) || "agent-state";
-    const content = `# App Context (Windsurf / Cascade Instructions)\n\nThis repo uses @contextlab/app-context to generate runtime context for agents.\n\n## Where to look\n\n- ${relAgentState}/AGENT_CONTEXT.md\n- ${relAgentState}/OPEN_ISSUES.md\n- ${relAgentState}/RUNBOOK.md\n- ${relAgentState}/AGENT_PLAYBOOK.md\n\n## How to use it\n\n- Before making changes, read the files above to understand current behavior, error patterns, and open issues.\n- Treat these as *runtime signals*, not source-of-truth over code.\n- Do not ingest or request secrets; the event stream is intentionally sanitized.\n\n## Updating context\n\nRun:\n\n- npx app-context summarize --output ./${relAgentState} --tail 2000\n\n`;
+    const content = `# App Context (Windsurf / Cascade Instructions)\n\nThis repo uses @contextlab/app-context to generate runtime context for agents.\n\n## Where to look\n\n- ${relAgentState}/AGENT_CONTEXT.md\n- ${relAgentState}/OPEN_ISSUES.md\n- ${relAgentState}/RUNBOOK.md\n- ${relAgentState}/BUSINESS_GOAL.md\n- ${relAgentState}/AGENT_PLAYBOOK.md\n\n## How to use it\n\n- Before making changes, read the files above to understand current behavior, error patterns, and open issues.\n- Treat these as *runtime signals*, not source-of-truth over code.\n- Do not ingest or request secrets; the event stream is intentionally sanitized.\n\n## Updating context\n\nRun:\n\n- npx app-context summarize --output ./${relAgentState} --tail 2000\n\n`;
     fs.writeFileSync(agentsMdPath, content, "utf8");
   }
 

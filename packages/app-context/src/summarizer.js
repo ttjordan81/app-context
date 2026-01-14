@@ -62,6 +62,14 @@ export async function summarize({ outputDir = "./agent-state", tail = 2000 } = {
     fs.writeFileSync(runbookPath, "# RUNBOOK\n", "utf8");
   }
 
+  const businessGoalPath = path.join(resolved, "BUSINESS_GOAL.md");
+  if (!fs.existsSync(businessGoalPath)) {
+    const here = path.dirname(fileURLToPath(import.meta.url));
+    const templatePath = path.join(here, "templates", "BUSINESS_GOAL.md");
+    const template = fs.readFileSync(templatePath, "utf8");
+    fs.writeFileSync(businessGoalPath, template, "utf8");
+  }
+
   const playbookPath = path.join(resolved, "AGENT_PLAYBOOK.md");
   if (!fs.existsSync(playbookPath)) {
     // create via init() semantics

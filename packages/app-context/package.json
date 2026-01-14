@@ -1,7 +1,7 @@
 {
   "name": "@contextlab/app-context",
-  "version": "0.1.1",
-  "description": "Capture sanitized request + domain events and generate mini-agent context markdown.",
+  "version": "0.1.2",
+  "description": "Keep your AI coding assistant up to speed. App-context generates structured, sanitized Markdown context from your app's runtime activity, so Windsurf, Cursor, and other AI coding assistants can quickly understand what your app is actually doing without you reconstructing history or copy-pasting logs.",
   "license": "MIT",
   "type": "module",
   "main": "./index.cjs",

@@ -54,6 +54,16 @@ export async function initAgentState({ outputDir = "./agent-state" } = {}) {
     const relAgentState = path.relative(projectRoot, resolved) || "agent-state";
     const content = `# App Context (Windsurf / Cascade Instructions)\n\nThis repo uses @contextlab/app-context to generate runtime context for agents.\n\n## Where to look\n\n- ${relAgentState}/AGENT_CONTEXT.md\n- ${relAgentState}/OPEN_ISSUES.md\n- ${relAgentState}/RUNBOOK.md\n- ${relAgentState}/BUSINESS_GOAL.md\n- ${relAgentState}/AGENT_PLAYBOOK.md\n\n## How to use it\n\n- Before making changes, read the files above to understand current behavior, error patterns, and open issues.\n- Treat these as *runtime signals*, not source-of-truth over code.\n- Do not ingest or request secrets; the event stream is intentionally sanitized.\n\n## Updating context\n\nRun:\n\n- npx app-context summarize --output ./${relAgentState} --tail 2000\n\n`;
     fs.writeFileSync(agentsMdPath, content, "utf8");
+    console.log(`✓ Created AGENTS.md`);
+  } else {
+    const relAgentState = path.relative(projectRoot, resolved) || "agent-state";
+    console.log(`⚠ AGENTS.md already exists. Please manually add the following section:\n`);
+    console.log(`## App Context\n`);
+    console.log(`- ${relAgentState}/AGENT_CONTEXT.md`);
+    console.log(`- ${relAgentState}/OPEN_ISSUES.md`);
+    console.log(`- ${relAgentState}/RUNBOOK.md`);
+    console.log(`- ${relAgentState}/BUSINESS_GOAL.md`);
+    console.log(`- ${relAgentState}/AGENT_PLAYBOOK.md\n`);
   }
 
   const windsurfRulesDir = path.join(projectRoot, ".windsurf", "rules");
@@ -63,6 +73,11 @@ export async function initAgentState({ outputDir = "./agent-state" } = {}) {
     const relAgentState = path.relative(projectRoot, resolved) || "agent-state";
     const content = `# App Context Files\n\n- When working on bugs or behavior changes, consult ${relAgentState}/AGENT_CONTEXT.md and ${relAgentState}/OPEN_ISSUES.md first.\n- Prefer small, safe changes. Never log request bodies, headers, tokens, or secrets.\n`;
     fs.writeFileSync(windsurfRulePath, content, "utf8");
+    console.log(`✓ Created .windsurf/rules/app-context.md`);
+  } else {
+    const relAgentState = path.relative(projectRoot, resolved) || "agent-state";
+    console.log(`⚠ .windsurf/rules/app-context.md already exists. Please manually add:\n`);
+    console.log(`- When working on bugs or behavior changes, consult ${relAgentState}/AGENT_CONTEXT.md and ${relAgentState}/OPEN_ISSUES.md first.\n`);
   }
 
   const cursorRulesPath = path.join(projectRoot, ".cursorrules");
@@ -70,5 +85,10 @@ export async function initAgentState({ outputDir = "./agent-state" } = {}) {
     const relAgentState = path.relative(projectRoot, resolved) || "agent-state";
     const content = `# App Context Instructions\n\n- Read ${relAgentState}/AGENT_CONTEXT.md and ${relAgentState}/OPEN_ISSUES.md before coding.\n- Keep changes minimal and safe; do not introduce logging of secrets.\n`;
     fs.writeFileSync(cursorRulesPath, content, "utf8");
+    console.log(`✓ Created .cursorrules`);
+  } else {
+    const relAgentState = path.relative(projectRoot, resolved) || "agent-state";
+    console.log(`⚠ .cursorrules already exists. Please manually add:\n`);
+    console.log(`- Read ${relAgentState}/AGENT_CONTEXT.md and ${relAgentState}/OPEN_ISSUES.md before coding.\n`);
   }
 }

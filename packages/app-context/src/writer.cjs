@@ -10,6 +10,19 @@ function createWriter({ outputDir }) {
   function initOnce() {
     if (initialized) return;
     ensureDir(resolved);
+    
+    // Truncate to last 2000 lines on restart
+    try {
+      if (fs.existsSync(eventsPath)) {
+        const content = fs.readFileSync(eventsPath, "utf8");
+        const lines = content.trim().split("\n");
+        if (lines.length > 2000) {
+          const truncated = lines.slice(-2000).join("\n") + "\n";
+          fs.writeFileSync(eventsPath, truncated, "utf8");
+        }
+      }
+    } catch (_e) {}
+    
     initialized = true;
   }
 

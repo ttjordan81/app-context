@@ -25,6 +25,30 @@ export async function initAgentState({ outputDir = "./agent-state" } = {}) {
     fs.writeFileSync(playbookTarget, template, "utf8");
   }
 
+  const agentContextTarget = path.join(resolved, "AGENT_CONTEXT.md");
+  if (!fs.existsSync(agentContextTarget)) {
+    const here = path.dirname(fileURLToPath(import.meta.url));
+    const templatePath = path.join(here, "templates", "AGENT_CONTEXT.md");
+    const template = fs.readFileSync(templatePath, "utf8");
+    fs.writeFileSync(agentContextTarget, template, "utf8");
+  }
+
+  const openIssuesTarget = path.join(resolved, "OPEN_ISSUES.md");
+  if (!fs.existsSync(openIssuesTarget)) {
+    const here = path.dirname(fileURLToPath(import.meta.url));
+    const templatePath = path.join(here, "templates", "OPEN_ISSUES.md");
+    const template = fs.readFileSync(templatePath, "utf8");
+    fs.writeFileSync(openIssuesTarget, template, "utf8");
+  }
+
+  const runbookTarget = path.join(resolved, "RUNBOOK.md");
+  if (!fs.existsSync(runbookTarget)) {
+    const here = path.dirname(fileURLToPath(import.meta.url));
+    const templatePath = path.join(here, "templates", "RUNBOOK.md");
+    const template = fs.readFileSync(templatePath, "utf8");
+    fs.writeFileSync(runbookTarget, template, "utf8");
+  }
+
   const agentsMdPath = path.join(projectRoot, "AGENTS.md");
   if (!fs.existsSync(agentsMdPath)) {
     const relAgentState = path.relative(projectRoot, resolved) || "agent-state";

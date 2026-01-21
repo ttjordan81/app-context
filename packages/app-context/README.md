@@ -78,6 +78,33 @@ Summarize events into markdown:
 npx app-context summarize --output ./agent-state --tail 2000
 ```
 
+## Auto-Update Workflow (Recommended)
+
+For real-time context updates during development, use a file watcher to automatically run summarize when events are logged:
+
+**1. Install nodemon:**
+```bash
+npm install --save-dev nodemon
+```
+
+**2. Add scripts to your `package.json`:**
+```json
+{
+  "scripts": {
+    "start": "node server.js",
+    "watch-context": "nodemon --watch agent-state/events.ndjson --exec 'npx app-context summarize --output ./agent-state --tail 2000'",
+    "dev": "npm-run-all --parallel start watch-context"
+  }
+}
+```
+
+**3. Run with auto-update:**
+```bash
+npm run dev
+```
+
+This keeps your agent-state files fresh without manual intervention. Every time your app logs events, the context files automatically update.
+
 ## Outputs
 
 `app-context summarize` generates:

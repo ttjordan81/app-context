@@ -3,6 +3,23 @@
   "version": "0.1.4",
   "description": "Keep your AI coding assistant up to speed. App-context generates structured, sanitized Markdown context from your app's runtime activity, so Windsurf, Cursor, and other AI coding assistants can quickly understand what your app is actually doing without you reconstructing history or copy-pasting logs.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ttjordan/app-context.git",
+    "directory": "packages/app-context"
+  },
+  "keywords": [
+    "ai",
+    "coding-assistant",
+    "windsurf",
+    "cursor",
+    "context",
+    "debugging",
+    "express",
+    "middleware",
+    "agent",
+    "markdown"
+  ],
   "type": "module",
   "main": "./index.cjs",
   "module": "./index.js",

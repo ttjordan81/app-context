@@ -78,6 +78,8 @@ export async function summarize({ outputDir = "./agent-state", tail = 2000 } = {
     const template = fs.readFileSync(templatePath, "utf8");
     fs.writeFileSync(playbookPath, template, "utf8");
   }
+
+  console.log(`✓ Updated AGENT_CONTEXT.md, OPEN_ISSUES.md (${events.length} events processed)`);
 }
 
 function formatPairs(pairs) {

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>Mini Brain Demo</h1>
+    <h1>App Context Demo</h1>
     <p class="muted">
       Submit a form, generate sanitized request + domain events, then run the summarizer to produce agent context markdown.
     </p>

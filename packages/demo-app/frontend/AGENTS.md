@@ -1,4 +1,4 @@
-# Mini Brain (Windsurf / Cascade Instructions)
+# App Context Demo (Windsurf / Cascade Instructions)
 
 This repo uses @contextlab/app-context to generate runtime context for agents.
 

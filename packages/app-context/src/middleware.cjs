@@ -5,7 +5,7 @@ function createMiddleware({ writer, redact, excludeRoutes = [] }) {
 
   return function appContextMiddleware(req, res, next) {
     try {
-      const path = req.path || req.url || "";
+      const path = getSafePath(req);
       if (excluded.has(path)) return next();
 
       const requestId = createRequestId();
@@ -31,6 +31,22 @@ function createMiddleware({ writer, redact, excludeRoutes = [] }) {
       next();
     }
   };
+}
+
+function getSafePath(req) {
+  const p = typeof req?.path === "string" ? req.path : "";
+  if (p) return p;
+
+  const raw =
+    (typeof req?.originalUrl === "string" && req.originalUrl) ||
+    (typeof req?.url === "string" && req.url) ||
+    "";
+
+  // Strip query string / fragments to avoid leaking tokens or PII via URL params.
+  const q = raw.indexOf("?");
+  const h = raw.indexOf("#");
+  const cut = q === -1 ? h : h === -1 ? q : Math.min(q, h);
+  return cut === -1 ? raw : raw.slice(0, cut);
 }
 
 module.exports = { createMiddleware };

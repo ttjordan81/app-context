@@ -21,6 +21,7 @@ export async function summarize({ outputDir = "./agent-state", tail = 2000 } = {
   const routeErrorCounts = new Map();
   const errorCounts = new Map();
   const domainCounts = new Map();
+  const domainMeta = new Map();
   const recentDomain = [];
 
   for (const e of events) {
@@ -36,6 +37,14 @@ export async function summarize({ outputDir = "./agent-state", tail = 2000 } = {
 
     if (e.type === "domain") {
       domainCounts.set(e.name, (domainCounts.get(e.name) || 0) + 1);
+      if (e.meta && typeof e.meta === "object") {
+        if (!domainMeta.has(e.name)) domainMeta.set(e.name, new Map());
+        const metaMap = domainMeta.get(e.name);
+        for (const [k, v] of Object.entries(e.meta)) {
+          const mk = `${k}=${v}`;
+          metaMap.set(mk, (metaMap.get(mk) || 0) + 1);
+        }
+      }
       recentDomain.push(e);
     }
   }
@@ -49,7 +58,7 @@ export async function summarize({ outputDir = "./agent-state", tail = 2000 } = {
 
   fs.writeFileSync(
     path.join(resolved, "AGENT_CONTEXT.md"),
-    `# AGENT_CONTEXT\n\nLast updated: ${now}\n\n## Top Routes\n\n${formatRoutes(topRoutes, routeErrorCounts)}\n\n## Top Errors\n\n${formatPairs(topErrors)}\n\n## Top Domain Events\n\n${formatPairs(topDomain)}\n\n## Recent Domain Events\n\n${formatRecentDomain(lastDomain)}\n`,
+    `# AGENT_CONTEXT\n\nLast updated: ${now}\n\n## Top Routes\n\n${formatRoutes(topRoutes, routeErrorCounts)}\n\n## Top Errors\n\n${formatPairs(topErrors)}\n\n## Top Domain Events\n\n${formatDomainEvents(topDomain, domainMeta)}\n\n## Recent Domain Events\n\n${formatRecentDomain(lastDomain)}\n`,
     "utf8"
   );
 
@@ -112,7 +121,32 @@ function formatIssues(topErrors) {
     .join("\n");
 }
 
+function formatDomainEvents(domainPairs, domainMeta) {
+  if (!domainPairs.length) return "(none)";
+  return domainPairs
+    .map(([name, count]) => {
+      let line = `- ${name}: ${count}`;
+      const metaMap = domainMeta.get(name);
+      if (metaMap && metaMap.size > 0) {
+        const topMeta = [...metaMap.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
+        const metaStr = topMeta.map(([k, v]) => `${k} (${v})`).join(", ");
+        line += ` — ${metaStr}`;
+      }
+      return line;
+    })
+    .join("\n");
+}
+
 function formatRecentDomain(events) {
   if (!events.length) return "(none)";
-  return events.map((e) => `- ${e.ts} ${e.name}`).join("\n");
+  return events
+    .map((e) => {
+      let line = `- ${e.ts} ${e.name}`;
+      if (e.meta && typeof e.meta === "object" && Object.keys(e.meta).length > 0) {
+        const metaStr = Object.entries(e.meta).map(([k, v]) => `${k}=${v}`).join(", ");
+        line += ` (${metaStr})`;
+      }
+      return line;
+    })
+    .join("\n");
 }

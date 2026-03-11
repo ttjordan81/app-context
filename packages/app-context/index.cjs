@@ -1,2 +1,2 @@
-const { createAppContext } = require("./src/index.cjs");
-module.exports = { createAppContext };
+const { createAppContext, summarize } = require("./src/index.cjs");
+module.exports = { createAppContext, summarize };

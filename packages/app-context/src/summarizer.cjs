@@ -17,6 +17,7 @@ async function summarize({ outputDir = "./agent-state", tail = 2000 } = {}) {
   }
 
   const routeCounts = new Map();
+  const routeErrorCounts = new Map();
   const errorCounts = new Map();
   const domainCounts = new Map();
   const recentDomain = [];
@@ -26,6 +27,7 @@ async function summarize({ outputDir = "./agent-state", tail = 2000 } = {}) {
       const key = `${e.method} ${e.path}`;
       routeCounts.set(key, (routeCounts.get(key) || 0) + 1);
       if (typeof e.status === "number" && e.status >= 400) {
+        routeErrorCounts.set(key, (routeErrorCounts.get(key) || 0) + 1);
         const ek = `${e.status} ${e.method} ${e.path}`;
         errorCounts.set(ek, (errorCounts.get(ek) || 0) + 1);
       }
@@ -46,7 +48,7 @@ async function summarize({ outputDir = "./agent-state", tail = 2000 } = {}) {
 
   fs.writeFileSync(
     path.join(resolved, "AGENT_CONTEXT.md"),
-    `# AGENT_CONTEXT\n\nLast updated: ${now}\n\n## Top Routes\n\n${formatPairs(topRoutes)}\n\n## Top Errors\n\n${formatPairs(topErrors)}\n\n## Top Domain Events\n\n${formatPairs(topDomain)}\n\n## Recent Domain Events\n\n${formatRecentDomain(lastDomain)}\n`,
+    `# AGENT_CONTEXT\n\nLast updated: ${now}\n\n## Top Routes\n\n${formatRoutes(topRoutes, routeErrorCounts)}\n\n## Top Errors\n\n${formatPairs(topErrors)}\n\n## Top Domain Events\n\n${formatPairs(topDomain)}\n\n## Recent Domain Events\n\n${formatRecentDomain(lastDomain)}\n`,
     "utf8"
   );
 
@@ -82,6 +84,20 @@ async function summarize({ outputDir = "./agent-state", tail = 2000 } = {}) {
 function formatPairs(pairs) {
   if (!pairs.length) return "(none)";
   return pairs.map(([k, v]) => `- ${k}: ${v}`).join("\n");
+}
+
+function formatRoutes(routes, routeErrorCounts) {
+  if (!routes.length) return "(none)";
+  return routes
+    .map(([route, total]) => {
+      const errors = routeErrorCounts.get(route) || 0;
+      if (errors > 0) {
+        const rate = ((errors / total) * 100).toFixed(1);
+        return `- ${route}: ${total} requests, ${errors} errors (${rate}% error rate)`;
+      }
+      return `- ${route}: ${total} requests, 0 errors`;
+    })
+    .join("\n");
 }
 
 function formatIssues(topErrors) {

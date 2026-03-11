@@ -44,6 +44,6 @@
   "dependencies": {},
   "scripts": {
     "summarize": "node ./bin/app-context.js summarize --output ../demo-app/agent-state --tail 2000",
-    "test": "node -e \"console.log('no tests yet')\""
+    "test": "node --test test/test.js"
   }
 }

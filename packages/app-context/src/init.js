@@ -49,6 +49,12 @@ export async function initAgentState({ outputDir = "./agent-state" } = {}) {
     fs.writeFileSync(runbookTarget, template, "utf8");
   }
 
+  const gitignorePath = path.join(resolved, ".gitignore");
+  if (!fs.existsSync(gitignorePath)) {
+    fs.writeFileSync(gitignorePath, "events.ndjson\n", "utf8");
+    console.log(`✓ Created ${path.relative(projectRoot, gitignorePath)}`);
+  }
+
   const agentsMdPath = path.join(projectRoot, "AGENTS.md");
   if (!fs.existsSync(agentsMdPath)) {
     const relAgentState = path.relative(projectRoot, resolved) || "agent-state";
